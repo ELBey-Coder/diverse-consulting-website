@@ -1,0 +1,44 @@
+{
+  "status": "passed",
+  "source_zip": "DiverseConsulting-HOSTINGER-STATIC-HOMEPAGE-LOAD-FIX.zip",
+  "changed_files": [
+    "app/about/page.tsx",
+    "app/ai-resource-center/page.tsx",
+    "app/ai-tools/page.tsx",
+    "app/blog/page.tsx",
+    "app/case-studies/page.tsx",
+    "app/contact/page.tsx",
+    "app/free-tools/page.tsx",
+    "app/page.tsx",
+    "app/partner-marketplace/page.tsx",
+    "app/pricing/page.tsx",
+    "app/privacy/page.tsx",
+    "app/resources/page.tsx",
+    "app/reviews/page.tsx",
+    "app/services/page.tsx",
+    "app/thank-you/page.tsx"
+  ],
+  "fix": "All main Next.js routes now redirect to the matching clean static HTML pages.",
+  "why": "The static .html pages display the correct style. The Next.js rendered routes were causing the bad blue-tab layout. This makes first-load and tab-click pages use the clean version.",
+  "route_map": {
+    "page.tsx": "/index.html",
+    "about/page.tsx": "/about.html",
+    "services/page.tsx": "/services.html",
+    "pricing/page.tsx": "/pricing.html",
+    "reviews/page.tsx": "/reviews.html",
+    "blog/page.tsx": "/blog.html",
+    "resources/page.tsx": "/resources.html",
+    "contact/page.tsx": "/contact.html",
+    "privacy/page.tsx": "/privacy.html",
+    "ai-tools/page.tsx": "/ai-tools.html",
+    "ai-resource-center/page.tsx": "/ai-resource-center.html",
+    "case-studies/page.tsx": "/case-studies.html",
+    "free-tools/page.tsx": "/free-tools.html",
+    "partner-marketplace/page.tsx": "/partner-marketplace.html",
+    "thank-you/page.tsx": "/thank-you.html"
+  },
+  "emails_found": [
+    "Consulting@DiverseConsultingllc.com"
+  ],
+  "issues": {}
+}

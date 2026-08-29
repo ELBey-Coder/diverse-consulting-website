@@ -1,0 +1,13 @@
+{
+  "status": "passed",
+  "source_zip": "DiverseConsulting-HOSTINGER-HYDRATION-SAFE-FIX.zip",
+  "changed_files": [
+    "app/page.tsx"
+  ],
+  "fix": "The Next.js home route / now redirects to /index.html, the same clean static style you see after clicking tabs like /reviews.html.",
+  "why": "The broken blue-tab view was the Next.js rendered route. The clean view is the static HTML version. Redirecting / to /index.html makes the first load use the clean version.",
+  "emails_found": [
+    "Consulting@DiverseConsultingllc.com"
+  ],
+  "issues": {}
+}

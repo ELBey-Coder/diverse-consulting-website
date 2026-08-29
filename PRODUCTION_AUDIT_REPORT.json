@@ -1,0 +1,161 @@
+{
+  "status": "passed",
+  "source_zip": "DiverseConsulting-HOSTINGER-FINAL-EMAIL-LLC.zip",
+  "output_zip": "DiverseConsulting-HOSTINGER-PRODUCTION-AUDITED-FINAL.zip",
+  "approved_email": "Consulting@DiverseConsultingllc.com",
+  "emails_found_after_cleanup": [
+    "Consulting@DiverseConsultingllc.com"
+  ],
+  "removed_files_count": 1,
+  "removed_files": [
+    "FINAL_EMAIL_LLC_AUDIT.json"
+  ],
+  "email_changed_files": [],
+  "file_inventory": {
+    "total_files": 54,
+    "asset_files": 9,
+    "html_files": 15,
+    "text_files_scanned": 43
+  },
+  "hostinger_settings": {
+    "framework_preset": "Next.js",
+    "node_version": "22.x",
+    "root_directory": "./",
+    "package_manager": "npm",
+    "build_command": "npm run build",
+    "output_directory": "out"
+  },
+  "feature_checks": {
+    "Brand text found": true,
+    "Correct email only": true,
+    "Chatbot launcher found": true,
+    "Chatbot panel found": true,
+    "HubSpot script ID found": true,
+    "YouTube references found": true,
+    "Facebook references found": true,
+    "Favicon found": true,
+    "Logo assets found": true
+  },
+  "scores": {
+    "Deployment readiness": 90,
+    "Brand/contact consistency": 100,
+    "Cleanup quality": 95,
+    "SEO basics": 60,
+    "Accessibility basics": 100,
+    "Link/asset confidence": 84
+  },
+  "issues": {},
+  "warnings": {
+    "Netlify references remain": [
+      "README.md",
+      "app/page.tsx",
+      "public/index.html",
+      "public/about.html",
+      "public/services.html",
+      "public/pricing.html",
+      "public/reviews.html",
+      "public/blog.html",
+      "public/resources.html",
+      "public/contact.html",
+      "public/privacy.html",
+      "public/ai-tools.html",
+      "public/partner-marketplace.html",
+      "public/free-tools.html",
+      "public/ai-resource-center.html",
+      "public/case-studies.html",
+      "public/thank-you.html",
+      "app/about/page.tsx",
+      "app/services/page.tsx",
+      "app/pricing/page.tsx",
+      "app/reviews/page.tsx",
+      "app/blog/page.tsx",
+      "app/resources/page.tsx",
+      "app/contact/page.tsx",
+      "app/privacy/page.tsx"
+    ],
+    "Potential missing assets": [
+      [
+        "components/HubSpot.tsx",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/index.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/about.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/services.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/pricing.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/reviews.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/blog.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/resources.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/contact.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/privacy.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/ai-tools.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/partner-marketplace.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/free-tools.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/ai-resource-center.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/case-studies.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ],
+      [
+        "public/thank-you.html",
+        "//js-na2.hs-scripts.com/246352749.js"
+      ]
+    ],
+    "HTML files missing meta description": [
+      "public/index.html",
+      "public/about.html",
+      "public/services.html",
+      "public/pricing.html",
+      "public/reviews.html",
+      "public/blog.html",
+      "public/resources.html",
+      "public/contact.html",
+      "public/privacy.html",
+      "public/ai-tools.html",
+      "public/partner-marketplace.html",
+      "public/free-tools.html",
+      "public/ai-resource-center.html",
+      "public/case-studies.html",
+      "public/thank-you.html"
+    ]
+  },
+  "note": "Audit used static source inspection. It did not run a live browser test or npm build in this environment."
+}
