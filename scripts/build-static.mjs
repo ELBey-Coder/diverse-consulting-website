@@ -24,9 +24,12 @@ function addSitewideChatbot(directory) {
     if (!entry.isFile() || !entry.name.endsWith('.html')) continue;
     const html = readFileSync(filePath, 'utf8');
     if (html.includes('/chatbot.js')) continue;
-    const updated = html.includes('</head>')
-      ? html.replace('</head>', `${chatbotAssets}</head>`)
-      : `${chatbotAssets}${html}`;
+    const normalized = html
+      .replaceAll('tel:+(443) 295-32477', 'tel:+14432953247')
+      .replaceAll('href="/contact">✉ Consulting@DiverseConsultingllc.com', 'href="mailto:Consulting@DiverseConsultingllc.com">✉ Consulting@DiverseConsultingllc.com');
+    const updated = normalized.includes('</head>')
+      ? normalized.replace('</head>', `${chatbotAssets}</head>`)
+      : `${chatbotAssets}${normalized}`;
     writeFileSync(filePath, updated);
   }
 }
