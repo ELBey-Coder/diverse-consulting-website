@@ -221,19 +221,12 @@ document.querySelector("#year").textContent = new Date().getFullYear();
 const modal = document.querySelector("#booking-modal");
 const formView = document.querySelector("#booking-form-view");
 const successView = document.querySelector("#success-view");
+const hubSpotConsultationUrl = "https://42o6zx.share-na2.hsforms.com/2HLIbABvpQAOnm6upaf1ysQ";
 let lastFocused;
 
 function openModal() {
-  lastFocused = document.activeElement;
-  if (bookingIndustry) bookingIndustry.value = activeIndustry.name;
-  formView.hidden = false;
-  successView.hidden = true;
-  modal.hidden = false;
-  document.body.classList.add("modal-open");
-  requestAnimationFrame(() => {
-    const firstField = modal.querySelector("input, iframe, button");
-    if (firstField) firstField.focus();
-  });
+  const bookingWindow = window.open(hubSpotConsultationUrl, "_blank", "noopener,noreferrer");
+  if (!bookingWindow) window.location.href = hubSpotConsultationUrl;
 }
 
 function closeModal() {
