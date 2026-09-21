@@ -164,10 +164,12 @@ industries.forEach((industry) => {
   button.addEventListener("click", () => selectIndustry(industry.id));
   tabs.appendChild(button);
 
-  const option = document.createElement("option");
-  option.value = industry.name;
-  option.textContent = industry.name;
-  bookingIndustry.appendChild(option);
+  if (bookingIndustry) {
+    const option = document.createElement("option");
+    option.value = industry.name;
+    option.textContent = industry.name;
+    bookingIndustry.appendChild(option);
+  }
 });
 
 document.querySelector("#services-grid").innerHTML = services.map(([icon, name, detail]) => `
@@ -191,7 +193,7 @@ function selectIndustry(id) {
   document.querySelector("#recommendation-name").textContent = activeIndustry.recommendation;
   document.querySelector("#recommendation-copy").textContent = activeIndustry.copy;
   document.querySelector("#outcome-text").textContent = activeIndustry.outcome;
-  bookingIndustry.value = activeIndustry.name;
+  if (bookingIndustry) bookingIndustry.value = activeIndustry.name;
 
   const message = document.querySelector("#hero-message");
   message.style.opacity = "0";
@@ -223,12 +225,15 @@ let lastFocused;
 
 function openModal() {
   lastFocused = document.activeElement;
-  bookingIndustry.value = activeIndustry.name;
+  if (bookingIndustry) bookingIndustry.value = activeIndustry.name;
   formView.hidden = false;
   successView.hidden = true;
   modal.hidden = false;
   document.body.classList.add("modal-open");
-  requestAnimationFrame(() => modal.querySelector("input").focus());
+  requestAnimationFrame(() => {
+    const firstField = modal.querySelector("input, iframe, button");
+    if (firstField) firstField.focus();
+  });
 }
 
 function closeModal() {
@@ -241,10 +246,4 @@ document.querySelectorAll(".open-booking").forEach((button) => button.addEventLi
 document.querySelectorAll("[data-close-modal]").forEach((element) => element.addEventListener("click", closeModal));
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && !modal.hidden) closeModal();
-});
-document.querySelector("#demo-form").addEventListener("submit", (event) => {
-  event.preventDefault();
-  formView.hidden = true;
-  successView.hidden = false;
-  successView.querySelector("button").focus();
 });
