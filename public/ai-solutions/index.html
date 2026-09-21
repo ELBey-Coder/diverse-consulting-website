@@ -19,6 +19,8 @@
       </a>
       <nav aria-label="Primary navigation">
         <a href="#solutions">Solutions</a>
+        <a href="#packages">Packages</a>
+        <a href="#live-demo">Live Demo</a>
         <a href="#services">Services</a>
       </nav>
       <button class="button button-small open-booking" type="button">Book a free demo <span aria-hidden="true">↗</span></button>
@@ -65,6 +67,49 @@
           </div>
           <div class="demo-footer"><span><i></i> CRM updated</span><span><i></i> Team alerted</span><span><i></i> Follow-up queued</span></div>
         </div>
+      </section>
+
+      <section class="packages-section section-shell" id="packages" aria-labelledby="packages-title">
+        <div class="section-heading centered">
+          <div class="kicker">Simple monthly options</div>
+          <h2 id="packages-title">Choose the automation level that fits.</h2>
+          <p>Every package starts with a workflow review and can grow as your call volume and team expand.</p>
+        </div>
+        <div class="package-grid">
+          <article class="package-card"><span>Starter</span><h3>$497<small>/month</small></h3><p>Capture leads and recover missed opportunities.</p><ul><li>Missed-call text-back</li><li>Lead capture form</li><li>Email team alerts</li><li>Monthly performance summary</li></ul><button class="button button-full package-select" data-package="Starter" type="button">Choose Starter</button></article>
+          <article class="package-card featured"><div class="popular">Most popular</div><span>Growth</span><h3>$997<small>/month</small></h3><p>Answer, qualify, book, and organize every inquiry.</p><ul><li>AI receptionist</li><li>Appointment booking</li><li>CRM automation</li><li>Automated confirmations</li></ul><button class="button button-full package-select" data-package="Growth" type="button">Choose Growth</button></article>
+          <article class="package-card"><span>Professional</span><h3>$1,500–$2,500<small>/month</small></h3><p>A custom revenue system across voice, chat, and follow-up.</p><ul><li>AI voice agents</li><li>Website chatbot</li><li>Multi-step follow-up</li><li>Custom workflows and reporting</li></ul><button class="button button-full package-select" data-package="Professional" type="button">Build my system</button></article>
+        </div>
+      </section>
+
+      <section class="real-demo section-shell" id="live-demo" aria-labelledby="demo-title">
+        <div class="section-heading centered"><div class="kicker">Interactive demonstration</div><h2 id="demo-title">Take a lead from first question to follow-up.</h2><p>This safe demonstration uses sample data and does not contact a real CRM, phone number, or calendar.</p></div>
+        <div class="demo-lab">
+          <div class="demo-controls">
+            <label>Choose an industry<select id="lab-industry"></select></label>
+            <button class="demo-action active" type="button" data-demo-step="answer"><b>1</b><span>Answer the call<small>Hear the opening response</small></span></button>
+            <button class="demo-action" type="button" data-demo-step="qualify"><b>2</b><span>Qualify the lead<small>See the key questions</small></span></button>
+            <button class="demo-action" type="button" data-demo-step="schedule"><b>3</b><span>Schedule service<small>Choose a sample time</small></span></button>
+            <button class="demo-action" type="button" data-demo-step="crm"><b>4</b><span>Send to sample CRM<small>Watch the record appear</small></span></button>
+            <button class="button button-full" id="run-full-demo" type="button">Run the complete demo</button>
+          </div>
+          <div class="demo-stage" id="demo-stage" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section class="industry-pages section-shell" aria-labelledby="industry-pages-title">
+        <div class="services-heading"><div><div class="kicker">Industry landing pages</div><h2 id="industry-pages-title">Explore a demonstration built for your market.</h2></div><p>Each page shows the exact answer, qualification questions, booking flow, CRM handoff, and follow-up.</p></div>
+        <div class="industry-link-grid" id="industry-link-grid"></div>
+      </section>
+
+      <section class="case-study-section section-shell" aria-labelledby="case-title">
+        <div class="section-heading centered"><div class="kicker">Demonstration case studies</div><h2 id="case-title">See how the complete workflow operates.</h2><p>These scenarios are illustrative examples—not claims of actual client results.</p></div>
+        <div class="case-grid">
+          <article><span>Electrical contractor</span><h3>After-hours emergency calls</h3><p><b>Problem:</b> Urgent calls reached voicemail while technicians were working.</p><p><b>System:</b> AI receptionist, safety triage, booking, and dispatch alerts.</p><p><b>Projected result:</b> Faster responses and more qualified emergency appointments.</p></article>
+          <article><span>HVAC company</span><h3>Seasonal call-volume spikes</h3><p><b>Problem:</b> Office staff could not answer every no-cool request.</p><p><b>System:</b> Automated intake, system diagnosis questions, and schedule routing.</p><p><b>Projected result:</b> More calls handled without adding a full call-center shift.</p></article>
+          <article><span>Car dealership</span><h3>After-hours inventory leads</h3><p><b>Problem:</b> Shoppers moved on before a salesperson responded.</p><p><b>System:</b> AI concierge, buyer qualification, showroom booking, and CRM handoff.</p><p><b>Projected result:</b> More conversations converted into scheduled visits.</p></article>
+        </div>
+        <p class="illustrative-note">Illustrative demonstrations only. Projected outcomes are estimates; actual results depend on lead volume, offer, market, staffing, and implementation.</p>
       </section>
 
       <section class="explorer section-shell" id="solutions" aria-labelledby="explorer-title">
@@ -127,6 +172,15 @@
       <span>© <span id="year"></span> Diverse Consulting LLC</span>
     </footer>
 
+    <button class="chat-launch" id="chat-launch" type="button" aria-expanded="false" aria-controls="ai-chat">Chat with our AI demo <span>✦</span></button>
+    <section class="ai-chat" id="ai-chat" aria-label="AI chatbot demonstration" hidden>
+      <header><div><strong>Diverse AI Guide</strong><small><i></i> Demonstration assistant</small></div><button id="chat-close" type="button" aria-label="Close chatbot">×</button></header>
+      <div class="chat-messages" id="chat-messages" aria-live="polite"></div>
+      <div class="chat-choices" id="chat-choices"></div>
+      <form id="chat-form"><label class="sr-only" for="chat-input">Message</label><input id="chat-input" placeholder="Ask about services or pricing…" autocomplete="off"><button type="submit" aria-label="Send message">➤</button></form>
+      <small class="chat-disclaimer">Demo only. Information stays in this browser.</small>
+    </section>
+
     <div class="modal" id="booking-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" hidden>
       <div class="modal-backdrop" data-close-modal></div>
       <div class="modal-card">
@@ -155,5 +209,6 @@
     </div>
 
     <script src="app.js"></script>
+    <script src="enhancements.js"></script>
   </body>
 </html>
