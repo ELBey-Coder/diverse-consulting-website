@@ -29,12 +29,13 @@ renderDemo();
 const links=document.querySelector('#industry-link-grid');
 links.innerHTML=Object.entries(demoConfig).map(([id,item])=>`<a href="../ai-for-${id==='investor'?'real-estate-investors':id==='dealer'?'car-dealerships':id==='contractor'?'contractors':id==='tint'?'window-tint':id+'s'}/" data-industry-link="${id}"><span>${item.icon}</span><b>AI for ${item.label}${['HVAC','Window Tint'].includes(item.label)?'':'s'}</b><small>Open the complete demonstration →</small></a>`).join('');
 
-document.querySelectorAll('.package-select').forEach(button=>button.addEventListener('click',()=>{const pkg=button.dataset.package;openModal();document.querySelector('[name="challenge"]').value='CRM and admin work';track('package_interest',{package:pkg})}));
+document.querySelectorAll('.package-select').forEach(button=>button.addEventListener('click',()=>{const pkg=button.dataset.package;openModal();const challenge=document.querySelector('[name="challenge"]');if(challenge)challenge.value='CRM and admin work';track('package_interest',{package:pkg})}));
 
 function track(event,details={}){const record={event,...details,path:location.pathname,time:new Date().toISOString()};const events=JSON.parse(localStorage.getItem('dc_demo_analytics')||'[]');events.push(record);localStorage.setItem('dc_demo_analytics',JSON.stringify(events.slice(-100)));window.dataLayer=window.dataLayer||[];window.dataLayer.push(record)}
 track('page_view',{page:'ai-solutions'});
 document.querySelectorAll('a,button').forEach(el=>el.addEventListener('click',()=>{if(el.matches('.open-booking,[data-industry-link],#run-full-demo'))track('demo_button_click',{label:el.textContent.trim().slice(0,60)})}));
-document.querySelector('#demo-form').addEventListener('submit',()=>track('form_submission',{industry:bookingIndustry.value}));
+const demoForm=document.querySelector('#demo-form');
+if(demoForm)demoForm.addEventListener('submit',()=>track('form_submission',{industry:bookingIndustry?.value||activeIndustry?.name||'Not selected'}));
 
 const chat=document.querySelector('#ai-chat'),messages=document.querySelector('#chat-messages'),choices=document.querySelector('#chat-choices'),chatInput=document.querySelector('#chat-input');
 function addMessage(text,who='bot'){const div=document.createElement('div');div.className=`chat-message ${who}`;div.textContent=text;messages.appendChild(div);messages.scrollTop=messages.scrollHeight}

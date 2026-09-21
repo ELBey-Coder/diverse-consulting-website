@@ -230,7 +230,10 @@ function openModal() {
   successView.hidden = true;
   modal.hidden = false;
   document.body.classList.add("modal-open");
-  requestAnimationFrame(() => modal.querySelector("input").focus());
+  requestAnimationFrame(() => {
+    const firstField = modal.querySelector("input, iframe, button");
+    if (firstField) firstField.focus();
+  });
 }
 
 function closeModal() {
