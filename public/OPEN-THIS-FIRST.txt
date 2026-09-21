@@ -1,0 +1,23 @@
+IMPORTANT: Extract the ZIP before opening the website.
+
+The browser error ERR_FILE_NOT_FOUND happens when index.html is opened while it is still inside the ZIP file.
+A ZIP preview only opens one temporary HTML file, so the other page files cannot be found.
+
+Correct steps:
+1. Right-click the ZIP file.
+2. Click Extract All.
+3. Open the extracted folder.
+4. Open index.html, or open the folder in VS Code and use Live Server.
+
+All header tabs are normal links:
+index.html
+about.html
+services.html
+pricing.html
+reviews.html
+blog.html
+resources.html
+contact.html
+
+
+After opening the site, read README.md for the complete business-info setup checklist.

@@ -11,3 +11,9 @@ npm run dev
 ```
 
 Netlify: build `npm run build`, publish `out`.
+
+## AI Solutions Demo
+
+The interactive AI automation demo is included at `/ai-solutions/`. Its static
+files are stored in `public/ai-solutions/`, and the Next.js development route is
+defined in `app/ai-solutions/page.tsx`.
