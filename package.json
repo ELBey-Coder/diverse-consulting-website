@@ -1,7 +1,7 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/build-static.mjs",
+    "build": "node scripts/generate-industry-pages.mjs && node scripts/build-static.mjs",
     "start": "next start"
   },
   "dependencies": {
