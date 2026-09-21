@@ -1,8 +1,11 @@
 {
   "scripts": {
     "dev": "next dev",
-    "build": "node scripts/generate-industry-pages.mjs && node scripts/prepare-site.mjs && node scripts/build-static.mjs",
-    "start": "node scripts/serve-static.mjs"
+    "build": "node scripts/generate-industry-pages.mjs && node scripts/prepare-site.mjs && next build",
+    "start": "next start -H 0.0.0.0"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "dependencies": {
     "next": "16.3.3",
