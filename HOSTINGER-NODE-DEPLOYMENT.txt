@@ -1,13 +1,14 @@
 DIVERSE CONSULTING — HOSTINGER NODE.JS SETTINGS
 
 Application type: Next.js
-Node.js version: 20 or 22
+Node.js version: 20.9 or newer (Node 22 recommended)
 Package manager: npm
 Install command: npm ci
 Build command: npm run build
 Start command: npm start
 Application root: the extracted folder containing package.json
+Output directory: out
 Port: use the PORT environment variable supplied by Hostinger
 
-This is a Next.js source deployment package. Upload it through Hostinger's
-Node.js deployment flow. Hostinger will run next build and next start.
+This is a Next.js static-export deployment package for Hostinger's Node.js
+build workflow. Hostinger will run next build and publish the out directory.
