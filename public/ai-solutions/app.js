@@ -221,7 +221,7 @@ document.querySelector("#year").textContent = new Date().getFullYear();
 const modal = document.querySelector("#booking-modal");
 const formView = document.querySelector("#booking-form-view");
 const successView = document.querySelector("#success-view");
-const hubSpotConsultationUrl = "https://42o6zx.share-na2.hsforms.com/2HLIbABvpQAOnm6upaf1ysQ";
+const hubSpotConsultationUrl = "https://meetings.hubspot.com/lamont-butler";
 let lastFocused;
 
 function openModal() {
