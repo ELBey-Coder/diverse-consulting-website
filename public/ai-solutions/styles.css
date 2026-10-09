@@ -15,7 +15,7 @@
 }
 
 * { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
+html { scroll-behavior: smooth; overflow-x: clip; }
 body {
   margin: 0;
   color: var(--ink);
@@ -27,7 +27,7 @@ body {
 button, input, select { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; }
-.page-glow { position: absolute; z-index: -1; border-radius: 50%; filter: blur(2px); pointer-events: none; }
+.page-glow { position: fixed; z-index: -1; border-radius: 50%; filter: blur(2px); pointer-events: none; }
 .glow-one { width: 560px; height: 560px; top: -270px; right: -130px; background: radial-gradient(circle, rgba(87, 121, 255, .22), transparent 68%); }
 .glow-two { width: 430px; height: 430px; top: 370px; left: -300px; background: radial-gradient(circle, rgba(79, 216, 255, .18), transparent 70%); }
 
@@ -293,4 +293,26 @@ body.modal-open { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+}
+
+/* Keep grid content and the shared chatbot inside the mobile viewport. */
+.hero > *, .demo-lab > *, .solution-panel > *, .services-grid > * { min-width: 0; }
+#dcSiteChat, #dcSiteChatLauncher { box-sizing: border-box; }
+#dcSiteChat .dc-site-chat-message { overflow-wrap: anywhere; }
+@media (max-width: 560px) {
+  #dcSiteChatLauncher { max-width: calc(100% - 24px); }
+  #dcSiteChat {
+    left: 12px;
+    right: 12px;
+    width: auto;
+    max-width: 390px;
+    margin-left: auto;
+    max-height: calc(100dvh - 82px);
+  }
+  #dcSiteChat .dc-site-chat-messages { min-height: 0; flex: 1; }
+  #dcSiteChat .dc-site-chat-head,
+  #dcSiteChat .dc-site-chat-quick,
+  #dcSiteChat .dc-site-chat-form,
+  #dcSiteChat .dc-site-chat-note { flex-shrink: 0; }
+  #dcSiteChat input { font-size: 16px; }
 }
