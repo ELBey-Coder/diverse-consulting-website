@@ -3,6 +3,14 @@ import { basename, extname, join, relative, resolve } from 'node:path';
 
 const root = resolve('public');
 const domain = 'https://diverseconsultingllc.com';
+const hubspotForm = 'https://42o6zx.share-na2.hsforms.com/2HLIbABvpQAOnm6upaf1ysQ';
+const hubspotMeeting = hubspotForm;
+const defaultDescription = 'AI receptionists, chatbots, appointment booking, missed-call text-back, and CRM automation for contractors and local service businesses.';
+const consultationCard = `<article class="upgrade-card">
+        <h3>Request an AI Automation Consultation</h3>
+        <p>Tell us what your business needs. Your information will be submitted securely through HubSpot.</p>
+        <a class="btn btn-primary" href="${hubspotForm}" target="_blank" rel="noopener">Open Secure HubSpot Form</a>
+      </article>`;
 
 const videos = [
   ['source-media/4.1-invideo-seedance_2_5.mp4', 'welcome-to-diverse-consulting.mp4'],
@@ -38,23 +46,46 @@ for (const file of files(root).filter(file => extname(file) === '.html')) {
   const canonical = domain + (path === '/' ? '/' : path);
   const industry = path.match(/^\/ai-for-([^/]+)\/$/);
   const fallbackTitle = (html.match(/<title>(.*?)<\/title>/is)?.[1] || 'Diverse Consulting').trim();
-  const title = industry ? `AI Receptionist for ${industryNames[industry[1]]} | Diverse Consulting` : fallbackTitle;
-  const fallbackDescription = (html.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i)?.[1] || 'AI automation, websites, and digital growth systems for service businesses.').trim();
+  const title = industry ? `AI Receptionist for ${industryNames[industry[1]]} | Diverse Consulting` : path === '/' ? 'AI Automation for Service Businesses | Diverse Consulting' : fallbackTitle;
+  const fallbackDescription = (html.match(/<meta\s+name=["']description["']\s+content=["']([^"']*)["']/i)?.[1] || defaultDescription).trim();
   const description = industry ? `See how an AI receptionist answers, qualifies, schedules, and follows up with customers for ${industryNames[industry[1]]}.` : fallbackDescription;
 
-  if (industry) {
+  if (industry || path === '/') {
     html = html.replace(/<title>.*?<\/title>/is, `<title>${title}</title>`)
-      .replace(/<meta\s+name=["']description["']\s+content=["'][^"']*["']\s*\/?>/i, `<meta name="description" content="${description}">`);
+  }
+  if (/<meta\s+name=["']description["']/i.test(html)) {
+    html = html.replace(/<meta\s+name=["']description["']\s+content=["'][^"']*["']\s*\/?>/i, `<meta name="description" content="${description}">`);
+  } else {
+    html = html.replace('</head>', `<meta name="description" content="${description}"></head>`);
   }
 
   for (const [youtube, source, label] of replacements) {
-    const iframe = new RegExp(`<iframe[^>]*title=["']${label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'][^>]*src=["']${youtube.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["'][^>]*><\\/iframe>`, 'gi');
+    const iframe = new RegExp(`<iframe[^>]*title=["']${label.replace(/[.*+?^\${}()|[\]\\]/g, '\\$&')}["'][^>]*src=["']${youtube.replace(/[.*+?^\${}()|[\]\\]/g, '\\$&')}["'][^>]*><\\/iframe>`, 'gi');
     html = html.replace(iframe, `<video controls preload="metadata" playsinline aria-label="${label}" style="width:100%;height:100%;aspect-ratio:16/9;border:0;border-radius:16px;display:block"><source src="${source}" type="video/mp4">Your browser does not support this video.</video>`);
   }
 
   html = html.replace(/data:image\/[^;"']+;base64,[A-Za-z0-9+/=]{100000,}/g, '/assets/diverse-consulting-logo.png');
+  html = html.replaceAll('https://diverseconsulting.netlify.app', domain);
+  html = html.replace(/<div[^>]*id=["']netlify-form-detection["'][\s\S]*?<\/div>/gi, '');
+  html = html.replace(/<div\s+style=["']display:none;["']\s+aria-hidden=["']true["']>[\s\S]*?<\/div>/gi, '');
+  html = html.replace(/<form class=["']ai-(readiness|savings)-form["'][^>]*>/gi, '<form class="ai-$1-form">');
+  html = html.replace(/\s*<input type=["']hidden["'] name=["']form-name["'][^>]*>\s*/gi, '\n');
+  html = html.replace(/\s*<p style=["']display:none;["']><label>Do not fill this out: <input name=["']bot-field["']><\/label><\/p>\s*/gi, '\n');
+  html = html.replace(/<article class=["']upgrade-card["']>\s*<h3>Lead Capture Form<\/h3>[\s\S]*?<\/form>\s*<\/article>/gi, consultationCard);
+  html = html.replace(/<form class=["']footform["'][\s\S]*?<\/form>/gi, `<p><a class="btn" href="${hubspotForm}" target="_blank" rel="noopener">Get AI &amp; Marketing Tips</a></p>`);
+  html = html.replace(/<form[^>]*data-netlify=["']true["'][\s\S]*?<\/form>/gi, `<p><a class="btn" href="${hubspotForm}" target="_blank" rel="noopener">Continue with HubSpot</a></p>`);
+  html = html.replace(/<a class=["']btn btn-primary["'] href=["']\/contact(?:\.html)?["']>Request a Time<\/a>/gi, `<a class="btn btn-primary" href="${hubspotMeeting}" target="_blank" rel="noopener">Request a Consultation</a>`);
   if (!/<link\s+rel=["']canonical["']/i.test(html)) html = html.replace('</head>', `<link rel="canonical" href="${canonical}"></head>`);
-  if (!/<meta\s+property=["']og:title["']/i.test(html)) html = html.replace('</head>', `<meta property="og:type" content="website"><meta property="og:title" content="${title.replaceAll('"', '&quot;')}"><meta property="og:description" content="${description.replaceAll('"', '&quot;')}"><meta property="og:url" content="${canonical}"></head>`);
+  if (/<meta\s+property=["']og:title["']/i.test(html)) {
+    html = html
+      .replace(/<meta\s+property=["']og:title["']\s+content=["'][^"']*["']\s*\/?>/i, `<meta property="og:title" content="${title.replaceAll('"', '&quot;')}">`)
+      .replace(/<meta\s+property=["']og:description["']\s+content=["'][^"']*["']\s*\/?>/i, `<meta property="og:description" content="${description.replaceAll('"', '&quot;')}">`)
+      .replace(/<meta\s+property=["']og:url["']\s+content=["'][^"']*["']\s*\/?>/i, `<meta property="og:url" content="${canonical}">`);
+  } else {
+    html = html.replace('</head>', `<meta property="og:type" content="website"><meta property="og:title" content="${title.replaceAll('"', '&quot;')}"><meta property="og:description" content="${description.replaceAll('"', '&quot;')}"><meta property="og:url" content="${canonical}"></head>`);
+  }
+  if (!/<meta\s+property=["']og:image["']/i.test(html)) html = html.replace('</head>', `<meta property="og:image" content="${domain}/assets/diverse-consulting-logo.png"></head>`);
+  if (!/<meta\s+name=["']twitter:card["']/i.test(html)) html = html.replace('</head>', '<meta name="twitter:card" content="summary_large_image"></head>');
   if (!html.includes('/analytics.js')) html = html.replace('</head>', '<script src="/site-config.js"></script><script src="/analytics.js" defer></script></head>');
   html = html.replaceAll('See packages and book a demo', 'See packages and request a demo')
     .replaceAll('Appointment booked</span>', 'Sample appointment</span>')
