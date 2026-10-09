@@ -66,6 +66,14 @@ for (const file of files(root).filter(file => extname(file) === '.html')) {
 
   html = html.replace(/data:image\/[^;"']+;base64,[A-Za-z0-9+/=]{100000,}/g, '/assets/diverse-consulting-logo.png');
   html = html.replaceAll('https://diverseconsulting.netlify.app', domain);
+  // Use verifiable process evidence until real client results and permissions exist.
+  html = html.replace(/<div class="container testgrid">[\s\S]*?<\/div>\s*<\/section>/gi, `<div class="container testgrid"><div class="testintro"><h3>Practical support for service businesses</h3><p>Start with your actual inquiry process and choose a bounded first improvement.</p><a class="btn small" href="/ai-for-electricians/">Request a lead-response review</a></div><article class="testcard"><h3>Review</h3><p>Map your current call and website inquiry flow.</p></article><article class="testcard"><h3>Verify</h3><p>Confirm software compatibility and human handoff rules.</p></article><article class="testcard"><h3>Test</h3><p>Use agreed acceptance checks before launch.</p></article></div></section>`);
+  html = html.replace(/<section class="stats">[\s\S]*?<\/section>/gi, '');
+  html = html.replaceAll('Join thousands of entrepreneurs who trust Diverse Consulting.', 'Discuss a practical next step for your business with Diverse Consulting.')
+    .replaceAll('Trusted by entrepreneurs worldwide', 'Practical guidance for service businesses')
+    .replaceAll('Quick Videos Coming Soon', 'Videos from Diverse Consulting')
+    .replaceAll('Use these examples to show visitors how your services connect to business outcomes.', 'Illustrative scenarios only. These examples are not verified client results.')
+    .replaceAll('HubSpot will create your contact record and send the approved follow-up automatically.', 'Our team must confirm your consultation request. Automatic follow-up is not promised until verified.');
   html = html.replace(/<div[^>]*id=["']netlify-form-detection["'][\s\S]*?<\/div>/gi, '');
   html = html.replace(/<div\s+style=["']display:none;["']\s+aria-hidden=["']true["']>[\s\S]*?<\/div>/gi, '');
   html = html.replace(/<form class=["']ai-(readiness|savings)-form["'][^>]*>/gi, '<form class="ai-$1-form">');
@@ -95,7 +103,7 @@ for (const file of files(root).filter(file => extname(file) === '.html')) {
   writeFileSync(file, html);
 }
 
-const urls = ['/', '/about.html', '/services.html', '/pricing.html', '/reviews.html', '/blog.html', '/resources.html', '/contact.html', '/ai-tools.html', '/free-tools.html', '/ai-resource-center.html', '/partner-marketplace.html', '/case-studies.html', '/privacy.html', '/ai-solutions/', ...Object.keys(industryNames).map(slug => `/ai-for-${slug}/`)];
+const urls = ['/', '/about.html', '/services.html', '/pricing.html', '/reviews.html', '/blog.html', '/resources.html', '/contact.html', '/ai-tools.html', '/free-tools.html', '/ai-resource-center.html', '/partner-marketplace.html', '/case-studies.html', '/privacy.html', '/ai-solutions/', '/lead-response-checklist/', '/lead-response-guides/', '/guides/missed-inquiries-electrical-contractors/', '/guides/ai-receptionist-versus-answering-service/', '/guides/electrical-contractor-booking-checklist/', '/guides/electrical-office-lead-information/', ...Object.keys(industryNames).map(slug => `/ai-for-${slug}/`)];
 writeFileSync(join(root, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(url => `  <url><loc>${domain}${url}</loc></url>`).join('\n')}\n</urlset>\n`);
 writeFileSync(join(root, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${domain}/sitemap.xml\n`);
 
