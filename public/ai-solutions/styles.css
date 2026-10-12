@@ -316,3 +316,20 @@ body.modal-open { overflow: hidden; }
   #dcSiteChat .dc-site-chat-note { flex-shrink: 0; }
   #dcSiteChat input { font-size: 16px; }
 }
+
+/* Draft: keep the AI Solutions chatbot inside the viewport. */
+#ai-chat { box-sizing: border-box; max-height: calc(100dvh - 90px); }
+#ai-chat:not([hidden]) { display: flex; flex-direction: column; }
+#ai-chat[hidden] { display: none; }
+#ai-chat > header, #chat-choices, #chat-form, .chat-disclaimer { flex-shrink: 0; }
+#chat-messages { min-height: 0; flex: 1 1 270px; overflow-y: auto; overflow-x: hidden; }
+#ai-chat .chat-message { overflow-wrap: anywhere; }
+#chat-form { min-width: 0; gap: 8px; }
+#chat-input { min-width: 0; width: 0; flex: 1 1 0; font-size: 16px; }
+#chat-form button { flex: 0 0 40px; }
+@media (max-width: 560px) {
+  #ai-chat { left: 12px; right: 12px; width: auto; max-width: none; margin: 0; bottom: 70px; max-height: calc(100dvh - 82px); }
+  #chat-launch { right: 12px; max-width: calc(100% - 24px); }
+  #ai-chat > header > div { min-width: 0; }
+  #ai-chat > header button { flex-shrink: 0; }
+}
