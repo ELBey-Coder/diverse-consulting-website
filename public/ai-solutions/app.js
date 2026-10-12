@@ -2,7 +2,7 @@ const industries = [
   {
     id: "electrician", short: "Electrician", name: "Electrical Contractors", icon: "⚡",
     pain: "Capture urgent calls, identify the job type, and route qualified leads without interrupting field work.",
-    impact: "18+", impactLabel: "more leads captured each month",
+    impact: "Sample", impactLabel: "proposed workflow, not measured results",
     steps: [
       ["Call or web inquiry arrives", "AI responds around the clock, even while your crew is on a job."],
       ["Safety and service triage", "The system checks urgency, issue type, property, and ZIP code."],
@@ -19,7 +19,7 @@ const industries = [
   {
     id: "plumber", short: "Plumber", name: "Plumbing Companies", icon: "◉",
     pain: "Separate emergencies from routine work, answer common questions, and fill the right service windows automatically.",
-    impact: "24/7", impactLabel: "emergency inquiry coverage",
+    impact: "Sample", impactLabel: "proposed workflow, not measured results",
     steps: [
       ["Customer calls with a problem", "The AI receptionist answers instantly and gathers the location."],
       ["Issue and urgency identified", "Leak, backup, fixture, or install details determine the next action."],
@@ -36,7 +36,7 @@ const industries = [
   {
     id: "hvac", short: "HVAC", name: "HVAC Companies", icon: "❄",
     pain: "Handle seasonal call volume, triage no-heat and no-cool requests, and keep maintenance leads moving.",
-    impact: "3×", impactLabel: "faster first response during peaks",
+    impact: "Sample", impactLabel: "proposed workflow, not measured results",
     steps: [
       ["High-volume inquiry received", "Voice and chat respond immediately during seasonal call spikes."],
       ["System and symptoms captured", "Equipment type, symptoms, location, and urgency are recorded."],
@@ -53,7 +53,7 @@ const industries = [
   {
     id: "roofer", short: "Roofer", name: "Roofing Companies", icon: "⌂",
     pain: "Qualify inspection requests, prioritize storm damage, and nurture estimates without chasing every lead manually.",
-    impact: "40%", impactLabel: "less manual lead follow-up",
+    impact: "Sample", impactLabel: "proposed workflow, not measured results",
     steps: [
       ["Ad or website lead arrives", "The chatbot responds before the prospect contacts another roofer."],
       ["Roof and damage details collected", "Property type, roof age, damage, insurance, and timeline are captured."],
@@ -70,7 +70,7 @@ const industries = [
   {
     id: "tint", short: "Window Tint", name: "Window Tint Shops", icon: "◩",
     pain: "Turn social and website questions into priced, scheduled jobs while reducing repetitive quote conversations.",
-    impact: "10+ hrs", impactLabel: "of weekly message handling reduced",
+    impact: "Sample", impactLabel: "proposed workflow, not measured results",
     steps: [
       ["Social or web message arrives", "The assistant replies instantly with a polished, consistent experience."],
       ["Vehicle and tint goals captured", "Year, make, model, windows, film preferences, and location are collected."],
@@ -87,7 +87,7 @@ const industries = [
   {
     id: "investor", short: "Real Estate", name: "Real Estate Investors", icon: "◆",
     pain: "Respond to motivated sellers quickly, gather property details, and prioritize acquisition calls by lead quality.",
-    impact: "60 sec", impactLabel: "target seller response time",
+    impact: "Sample", impactLabel: "proposed workflow, not measured results",
     steps: [
       ["Seller inquiry is received", "A text or voice conversation begins while motivation is high."],
       ["Property and motivation captured", "Condition, timeline, asking price, occupancy, and reason for selling are logged."],
@@ -104,7 +104,7 @@ const industries = [
   {
     id: "dealer", short: "Car Dealer", name: "Car Dealerships", icon: "▰",
     pain: "Answer inventory questions, qualify buying intent, and schedule appointments before shoppers move to another dealer.",
-    impact: "2×", impactLabel: "more after-hours conversations",
+    impact: "Sample", impactLabel: "proposed workflow, not measured results",
     steps: [
       ["Inventory inquiry arrives", "AI replies through voice, text, or web chat—even after the showroom closes."],
       ["Buying needs are qualified", "Vehicle, timeline, financing, trade-in, and preferred contact are captured."],
@@ -121,7 +121,7 @@ const industries = [
   {
     id: "contractor", short: "Contractor", name: "General Contractors", icon: "▦",
     pain: "Collect scope, budget, and timeline before consultations so estimators spend time on the best-fit projects.",
-    impact: "35%", impactLabel: "less time on unqualified inquiries",
+    impact: "Sample", impactLabel: "proposed workflow, not measured results",
     steps: [
       ["Project inquiry is submitted", "The assistant responds and begins a professional discovery conversation."],
       ["Scope and fit are assessed", "Project type, address, budget, timeline, plans, and decision-makers are captured."],

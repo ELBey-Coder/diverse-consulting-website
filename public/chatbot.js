@@ -37,7 +37,7 @@
     const industry = industries.find(function (name) { return q.includes(name); }) || pageIndustry();
     if (/price|pricing|cost|package|plan|recommend/.test(q)) return recommendation(q);
     if (/book|schedule|appointment|consult|demo/.test(q)) return 'You can request a consultation securely through HubSpot. Use the booking button below and select “AI Appointment Requested.”';
-    if (/hubspot|crm|lead/.test(q)) return 'Qualified website leads can be sent to HubSpot with their industry, urgency, package interest, service need, and appointment request. Your current consultation form already creates the contact and starts the follow-up email.';
+    if (/hubspot|crm|lead/.test(q)) return 'Qualified website leads can be sent to HubSpot with their industry, urgency, package interest, service need, and appointment request. Use the consultation form to request a review. A request is not a confirmed appointment; automated follow-up must be verified before it is promised.';
     if (/service|what do you do|help me/.test(q)) return 'We provide AI receptionists, website chatbots, voice agents, appointment booking, missed-call text-back, lead qualification, HubSpot CRM automation, customer support, sales assistance, and automated follow-up.';
     if (/website|hosting|seo|marketing/.test(q)) return 'Diverse Consulting also helps with websites, hosting, SEO, digital marketing, lead generation, and business automation.';
     if (/phone|call|email|contact/.test(q)) return 'Call ' + PHONE + ' or email ' + EMAIL + '. You can also use the secure HubSpot consultation form.';
