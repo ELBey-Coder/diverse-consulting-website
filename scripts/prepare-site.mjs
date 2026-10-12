@@ -100,6 +100,26 @@ for (const file of files(root).filter(file => extname(file) === '.html')) {
     .replaceAll('✓ Confirmation text and team alert queued', '✓ Demonstration only — no calendar or CRM was changed')
     .replace(/<div class="time"><button>/g, '<div class="time" aria-label="Sample appointment times"><button type="button" disabled>')
     .replace(/<button class="active">Tomorrow 1:00<\/button><button>Thursday 10:30<\/button><\/div>/g, '<button class="active" type="button" disabled>Tomorrow 1:00</button><button type="button" disabled>Thursday 10:30</button></div>');
+  // Apply contact and copy cleanup to the actual Next.js public pages as well as out/.
+  html = html.replace(/href=["']tel:[^"']*["']/gi, 'href="tel:+14432953247"')
+    .replaceAll('(443) 295-32477', '(443) 295-3247')
+    .replaceAll('443-295-32477', '443-295-3247');
+  html = html.replace(/<article class=["']upgrade-card["']>\s*<h3>YouTube Learning Center<\/h3>[\s\S]*?<\/article>/gi, '');
+  html = html.replace(/<a\b[^>]*href=["']https?:\/\/(?:www\.)?(?:youtube\.com|youtu\.be)[^"']*["'][^>]*>[\s\S]*?<\/a>/gi, '');
+  html = html.replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/gi, (block, text) => {
+    const data = JSON.parse(text);
+    function removeChannel(value) {
+      if (!value || typeof value !== 'object') return;
+      if (Array.isArray(value.sameAs)) value.sameAs = value.sameAs.filter(url => !/youtube\.com|youtu\.be/i.test(url));
+      Object.values(value).forEach(removeChannel);
+    }
+    removeChannel(data);
+    return '<script type="application/ld+json">' + JSON.stringify(data) + '</script>';
+  });
+  html = html.replaceAll('Add short videos to explain your services, build trust, and help visitors understand how AI and digital marketing can grow their business.', 'Watch these videos to learn how AI automation and digital marketing can support your business.')
+    .replaceAll('✓ ✓', '✓')
+    .replaceAll('Real-estate Investor', 'Real Estate Investor')
+    .replaceAll('Window-tint Businesses', 'Window Tint Businesses');
   writeFileSync(file, html);
 }
 
