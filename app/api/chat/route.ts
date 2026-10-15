@@ -1,5 +1,4 @@
 import { google } from '@ai-sdk/google';
-import { groq } from '@ai-sdk/groq';
 import { streamText } from 'ai';
 
 export const maxDuration = 30;
@@ -32,7 +31,6 @@ Do not invent services or pricing not listed. If unsure, offer the strategy sess
 export async function POST(req: Request) {
   const { messages } = await req.json();
 
-  // Try Gemini first (primary)
   try {
     const result = streamText({
       model: google('gemini-2.5-flash'),
@@ -40,23 +38,11 @@ export async function POST(req: Request) {
       messages,
     });
     return result.toDataStreamResponse();
-  } catch (geminiError) {
-    console.error('Gemini failed, falling back to Groq:', geminiError);
-  }
-
-  // Fallback to Groq
-  try {
-    const result = streamText({
-      model: groq('llama-3.3-70b-versatile'),
-      system: SYSTEM_PROMPT,
-      messages,
-    });
-    return result.toDataStreamResponse();
-  } catch (groqError) {
-    console.error('Groq also failed:', groqError);
+  } catch (error) {
+    console.error('Gemini failed:', error);
     return new Response(
       JSON.stringify({
-        error: 'Both AI providers are currently unavailable. Please call +1 (443) 295-3247 or email Consulting@DiverseConsultingllc.com.',
+        error: 'AI is currently unavailable. Please call +1 (443) 295-3247 or email Consulting@DiverseConsultingllc.com.',
       }),
       { status: 503, headers: { 'Content-Type': 'application/json' } }
     );
