@@ -123,6 +123,9 @@ export async function OPTIONS(req: Request) {
 }
 
 export async function POST(req: Request) {
+  const origin = req.headers.get('origin');
+  if (origin && !allowedOrigin(origin)) return reply({ error: 'ORIGIN_NOT_ALLOWED' }, 403, origin);
+  if (Number(req.headers.get('content-length') || 0) > 45000) return reply({ error: 'REQUEST_TOO_LARGE' }, 413, origin);
   let raw: unknown;
   try { raw = await req.json(); }
   catch { return reply({ error: 'INVALID_REQUEST', message: 'Invalid JSON.' }, 400, origin); }
