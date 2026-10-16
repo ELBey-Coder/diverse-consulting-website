@@ -90,11 +90,39 @@
     launcher.focus();
   }
 
-  function ask(text) {
+  const conversation = [];
+  let pending = false;
+  async function ask(text) {
     const question = text.trim();
-    if (!question) return;
+    if (!question || pending) return;
     addMessage(question, 'user');
-    window.setTimeout(function () { addMessage(answer(question), 'bot'); }, 180);
+    conversation.push({ role: 'user', text: question.slice(0, 1200) });
+    pending = true;
+    input.disabled = true;
+    const sendButton = panel.querySelector('.dc-site-chat-form button');
+    if (sendButton) sendButton.disabled = true;
+    addMessage('Thinking…', 'bot');
+    const waiting = messages.lastElementChild;
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversation.slice(-12) })
+      });
+      const data = await response.json().catch(function () { return {}; });
+      if (!response.ok || !data.answer) throw new Error(data.error || 'The AI assistant is currently unavailable.');
+      waiting.textContent = data.answer;
+      conversation.push({ role: 'model', text: data.answer.slice(0, 1200) });
+    } catch (error) {
+      conversation.pop();
+      waiting.textContent = 'The live AI assistant is unavailable right now. ' + (error.message || 'Please try again.') + ' You can request a consultation using the booking button.';
+    } finally {
+      pending = false;
+      input.disabled = false;
+      if (sendButton) sendButton.disabled = false;
+      messages.scrollTop = messages.scrollHeight;
+      input.focus();
+    }
   }
 
   function openBooking() {
