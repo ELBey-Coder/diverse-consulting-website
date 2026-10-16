@@ -59,7 +59,13 @@ export async function POST(req: Request) {
       messages: clean,
     });
     // Plain text stream — easy for the vanilla JS sitewide chatbot to consume
-    return result.toTextStreamResponse();
+    // Use toDataStreamResponse if toTextStreamResponse is unavailable
+    const response = typeof (result as any).toTextStreamResponse === 'function'
+      ? (result as any).toTextStreamResponse()
+      : new Response((result as any).textStream, {
+          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+        });
+    return response;
   } catch (error) {
     console.error('Gemini failed:', error);
     return new Response(
