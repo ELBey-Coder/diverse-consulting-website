@@ -19,32 +19,52 @@ Business info:
 - Contact: +1 (443) 295-3247, Consulting@DiverseConsultingllc.com
 
 Your job:
-1. Hold natural conversations — not keyword matching
+1. Hold natural, detailed conversations — not keyword matching. Give specific, helpful answers tailored to the visitor's industry and situation.
 2. Qualify visitors: ask about business type, what they want to automate, urgency, package interest
-3. Recommend the right package based on needs
+3. Recommend the right package based on needs, with concrete examples of how it helps their specific trade
 4. Answer FAQs about AI agents, chatbots, voice agents, HubSpot automation, websites, hosting, SEO
 5. Guide toward booking a free strategy session when appropriate
-6. Be concise, friendly, helpful. Keep responses under 150 words unless detail is requested.
+6. Be conversational and thorough. Explain HOW the service solves their problem, not just what it is.
 
 Do not invent services or pricing not listed. If unsure, offer the strategy session.`;
 
 export async function POST(req: Request) {
-  const { messages } = await req.json();
+  let messages: Array<{ role: string; content: string }> = [];
+  try {
+    const body = await req.json();
+    messages = body.messages || [];
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid request body.' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
+
+  // Keep only valid chat roles and cap history length
+  const clean = messages
+    .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
+    .slice(-10);
+
+  if (!clean.length) {
+    return new Response(JSON.stringify({ error: 'No messages provided.' }), {
+      status: 400,
+      headers: { 'Content-Type': 'application/json' },
+    });
+  }
 
   try {
     const result = streamText({
       model: google('gemini-2.5-flash'),
       system: SYSTEM_PROMPT,
-      messages,
+      messages: clean,
     });
-    return result.toDataStreamResponse();
+    // Plain text stream — easy for the vanilla JS sitewide chatbot to consume
+    return result.toTextStreamResponse();
   } catch (error) {
     console.error('Gemini failed:', error);
     return new Response(
-      JSON.stringify({
-        error: 'AI is currently unavailable. Please call +1 (443) 295-3247 or email Consulting@DiverseConsultingllc.com.',
-      }),
-      { status: 503, headers: { 'Content-Type': 'application/json' } }
+      'Sorry, the AI assistant is currently unavailable. Please call +1 (443) 295-3247 or email Consulting@DiverseConsultingllc.com.',
+      { status: 503, headers: { 'Content-Type': 'text/plain' } }
     );
   }
 }

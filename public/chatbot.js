@@ -4,7 +4,10 @@
   const HUBSPOT_FORM = 'https://42o6zx.share-na2.hsforms.com/2HLIbABvpQAOnm6upaf1ysQ';
   const PHONE = '(443) 295-3247';
   const EMAIL = 'Consulting@DiverseConsultingllc.com';
-  const industries = ['electrician', 'plumber', 'hvac', 'roofer', 'contractor', 'car dealership', 'real-estate investor', 'window tint'];
+  const CHAT_API = '/api/chat';
+
+  // Conversation history for the Gemini API (kept in memory per page load)
+  const conversation = [];
 
   function removeLegacyChatbots() {
     ['dcChatbotLauncher', 'dcChatbotPanel', 'chat-launch', 'ai-chat'].forEach(function (id) {
@@ -26,25 +29,6 @@
     return '';
   }
 
-  function recommendation(text) {
-    if (/voice|reception|answer call|phone|book|schedule|crm/i.test(text)) return 'Growth — $997/month is the best starting point. It includes an AI receptionist, appointment booking, and CRM automation.';
-    if (/custom|follow.?up|multiple|advanced|professional|workflow/i.test(text)) return 'Professional — $1,500–$2,500/month fits custom voice agents, chatbot, follow-up, and connected workflows.';
-    return 'Starter — $497/month fits missed-call text-back and lead capture. If you also need calls answered and appointments booked, choose Growth.';
-  }
-
-  function answer(question) {
-    const q = question.toLowerCase();
-    const industry = industries.find(function (name) { return q.includes(name); }) || pageIndustry();
-    if (/price|pricing|cost|package|plan|recommend/.test(q)) return recommendation(q);
-    if (/book|schedule|appointment|consult|demo/.test(q)) return 'You can request a consultation securely through HubSpot. Use the booking button below and select “AI Appointment Requested.”';
-    if (/hubspot|crm|lead/.test(q)) return 'Qualified website leads can be sent to HubSpot with their industry, urgency, package interest, service need, and appointment request. Use the consultation form to request a review. A request is not a confirmed appointment; automated follow-up must be verified before it is promised.';
-    if (/service|what do you do|help me/.test(q)) return 'We provide AI receptionists, website chatbots, voice agents, appointment booking, missed-call text-back, lead qualification, HubSpot CRM automation, customer support, sales assistance, and automated follow-up.';
-    if (/website|hosting|seo|marketing/.test(q)) return 'Diverse Consulting also helps with websites, hosting, SEO, digital marketing, lead generation, and business automation.';
-    if (/phone|call|email|contact/.test(q)) return 'Call ' + PHONE + ' or email ' + EMAIL + '. You can also use the secure HubSpot consultation form.';
-    if (industry) return 'For a ' + industry + ', the AI receptionist can answer immediately, ask industry-specific qualification questions, offer an approved appointment, send the lead to HubSpot, and trigger follow-up.';
-    return 'I can explain services, recommend a package, show an industry workflow, or help you request a consultation. Tell me your business type and what you want to automate.';
-  }
-
   removeLegacyChatbots();
   document.body.insertAdjacentHTML('beforeend',
     '<button id="dcSiteChatLauncher" type="button" aria-expanded="false" aria-controls="dcSiteChat">💬 AI Solutions Assistant</button>' +
@@ -60,6 +44,8 @@
   const panel = document.getElementById('dcSiteChat');
   const messages = panel.querySelector('.dc-site-chat-messages');
   const input = panel.querySelector('input');
+  const form = panel.querySelector('form');
+  let busy = false;
 
   function addMessage(text, role, html) {
     const message = document.createElement('div');
@@ -68,6 +54,7 @@
     else message.textContent = text;
     messages.appendChild(message);
     messages.scrollTop = messages.scrollHeight;
+    return message;
   }
 
   function openChat() {
@@ -76,9 +63,11 @@
     launcher.setAttribute('aria-expanded', 'true');
     if (!messages.children.length) {
       const context = pageIndustry();
-      addMessage(context
+      const greeting = context
         ? 'Welcome! I can show how our AI receptionist answers, qualifies, and schedules customers for a ' + context + '.'
-        : 'Welcome! I can explain our AI services, recommend the right package, answer industry questions, and help you request a consultation.', 'bot');
+        : 'Welcome! I can explain our AI services, recommend the right package, answer industry questions, and help you request a consultation.';
+      addMessage(greeting, 'bot');
+      conversation.push({ role: 'assistant', content: greeting });
     }
     input.focus();
   }
@@ -90,11 +79,58 @@
     launcher.focus();
   }
 
-  function ask(text) {
+  function setBusy(state) {
+    busy = state;
+    input.disabled = state;
+    form.querySelector('button[type="submit"]').disabled = state;
+  }
+
+  async function ask(text) {
     const question = text.trim();
-    if (!question) return;
+    if (!question || busy) return;
     addMessage(question, 'user');
-    window.setTimeout(function () { addMessage(answer(question), 'bot'); }, 180);
+    conversation.push({ role: 'user', content: question });
+    setBusy(true);
+
+    // Placeholder bot message that we stream into
+    const botEl = addMessage('…', 'bot');
+
+    try {
+      const res = await fetch(CHAT_API, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: conversation.slice(-10) }),
+      });
+
+      if (!res.ok || !res.body) throw new Error('API request failed');
+
+      const reader = res.body.getReader();
+      const decoder = new TextDecoder();
+      let fullText = '';
+      let firstChunk = true;
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value, { stream: true });
+        if (firstChunk) {
+          firstChunk = false;
+          botEl.textContent = '';
+        }
+        fullText += chunk;
+        botEl.textContent = fullText;
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      fullText = fullText.trim();
+      if (!fullText) throw new Error('Empty response');
+      conversation.push({ role: 'assistant', content: fullText });
+    } catch (err) {
+      botEl.textContent = 'Sorry, I’m having trouble right now. Call ' + PHONE + ' or email ' + EMAIL + ', or try again in a moment.';
+    } finally {
+      setBusy(false);
+      input.focus();
+    }
   }
 
   function openBooking() {
@@ -111,6 +147,6 @@
   panel.querySelector('.dc-site-chat-close').addEventListener('click', closeChat);
   panel.querySelectorAll('[data-question]').forEach(function (button) { button.addEventListener('click', function () { ask(button.dataset.question || ''); }); });
   panel.querySelector('[data-book-chat]').addEventListener('click', openBooking);
-  panel.querySelector('form').addEventListener('submit', function (event) { event.preventDefault(); ask(input.value); input.value = ''; });
+  form.addEventListener('submit', function (event) { event.preventDefault(); ask(input.value); input.value = ''; });
   document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && panel.classList.contains('open')) closeChat(); });
 })();
