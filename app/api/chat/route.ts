@@ -89,23 +89,42 @@ async function googleReply(messages: ChatMessage[], key: string): Promise<string
   }
 }
 
+// Allow the public Hostinger website to call this Vercel API without exposing the Gemini key.
+const ALLOWED_ORIGINS = new Set([
+  'https://diverseconsultingllc.com',
+  'https://www.diverseconsultingllc.com',
+]);
+function corsHeaders(origin: string | null): HeadersInit {
+  return origin && ALLOWED_ORIGINS.has(origin)
+    ? { 'Access-Control-Allow-Origin': origin, 'Vary': 'Origin', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' }
+    : { 'Vary': 'Origin' };
+}
+function reply(data: unknown, status: number, origin: string | null) {
+  return Response.json(data, { status, headers: corsHeaders(origin) });
+}
+export async function OPTIONS(req: Request) {
+  const origin = req.headers.get('origin');
+  if (!origin || !ALLOWED_ORIGINS.has(origin)) return new Response(null, { status: 403 });
+  return new Response(null, { status: 204, headers: corsHeaders(origin) });
+}
+
 export async function POST(req: Request) {
   let raw: unknown;
   try { raw = await req.json(); }
-  catch { return Response.json({ error: 'INVALID_REQUEST', message: 'Invalid JSON.' }, { status: 400 }); }
+  catch { return reply({ error: 'INVALID_REQUEST', message: 'Invalid JSON.' }, 400, origin); }
   const messages = (raw && typeof raw === 'object' && 'messages' in raw && Array.isArray(raw.messages))
     ? raw.messages.filter((m: unknown): m is ChatMessage => !!m && typeof m === 'object'
         && 'role' in m && (m.role === 'user' || m.role === 'assistant')
         && 'content' in m && typeof m.content === 'string' && m.content.length <= 4000).slice(-10)
     : [];
   const question = [...messages].reverse().find((m: ChatMessage) => m.role === 'user')?.content || '';
-  if (!question) return Response.json({ error: 'INVALID_REQUEST', message: 'A user message is required.' }, { status: 400 });
+  if (!question) return reply({ error: 'INVALID_REQUEST', message: 'A user message is required.' }, 400, origin);
 
   const key = process.env.GOOGLE_GENERATIVE_AI_API_KEY;
   if (key) {
     try {
       const answer = await googleReply(messages, key);
-      return Response.json({ answer, mode: 'ai' });
+      return reply({ answer, mode: 'ai' }, 200, origin);
     } catch (error) {
       // Logs contain provider error/status but never the secret API key.
       console.error('Gemini provider failure:', error instanceof Error ? error.message : String(error));
@@ -114,5 +133,5 @@ export async function POST(req: Request) {
     console.error('Gemini API key missing');
   }
   // Keep answering common visitor questions even if the external AI provider is down.
-  return Response.json({ answer: fallbackAnswer(question), mode: 'service-info' });
+  return reply({ answer: fallbackAnswer(question), mode: 'service-info' }, 200, origin);
 }
