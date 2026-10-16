@@ -61,7 +61,7 @@ async function googleReply(messages: ChatMessage[], key: string): Promise<string
     const catalog = await list.json() as { models?: GoogleModel[] };
     // Prefer an explicitly known free-tier model; never select unrelated/zero-quota
     // experimental models just because their name contains "flash".
-    const preferred = ['models/gemini-2.5-flash-lite', 'models/gemini-2.5-flash'];
+    const preferred = ['models/gemini-3.5-flash-lite', 'models/gemini-3.8-flash'];
     const supported = new Set((catalog.models || [])
       .filter(m => m.supportedGenerationMethods?.includes('generateContent'))
       .map(m => m.name));
