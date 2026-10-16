@@ -94,8 +94,8 @@ const ALLOWED_ORIGINS = new Set([
   'https://diverseconsultingllc.com',
   'https://www.diverseconsultingllc.com',
 ]);
-function corsHeaders(origin: string | null): HeadersInit {
-  return origin && ALLOWED_ORIGINS.has(origin)
+function allowedOrigin(origin: string | null): boolean {\n  if (!origin) return false;\n  if (ALLOWED_ORIGINS.has(origin)) return true;\n  try {\n    const url = new URL(origin);\n    return url.protocol === 'https:' && (url.hostname === 'diverse-consulting-ai-preview.vercel.app' || /^diverse-consulting-ai-preview-[a-z0-9-]+-diverseconsulting\\.vercel\\.app$/.test(url.hostname));\n  } catch { return false; }\n}\nfunction corsHeaders(origin: string | null): HeadersInit {
+  return origin && allowedOrigin(origin)
     ? { 'Access-Control-Allow-Origin': origin, 'Vary': 'Origin', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' }
     : { 'Vary': 'Origin' };
 }
@@ -104,7 +104,7 @@ function reply(data: unknown, status: number, origin: string | null) {
 }
 export async function OPTIONS(req: Request) {
   const origin = req.headers.get('origin');
-  if (!origin || !ALLOWED_ORIGINS.has(origin)) return new Response(null, { status: 403 });
+  if (!origin || !allowedOrigin(origin)) return new Response(null, { status: 403 });
   return new Response(null, { status: 204, headers: corsHeaders(origin) });
 }
 
