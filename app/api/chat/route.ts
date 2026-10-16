@@ -1,5 +1,5 @@
 import { google } from '@ai-sdk/google';
-import { streamText } from 'ai';
+import { streamText, type CoreMessage } from 'ai';
 
 export const maxDuration = 30;
 
@@ -41,9 +41,10 @@ export async function POST(req: Request) {
   }
 
   // Keep only valid chat roles and cap history length
-  const clean = messages
+  const clean: CoreMessage[] = messages
     .filter((m) => m && (m.role === 'user' || m.role === 'assistant') && typeof m.content === 'string')
-    .slice(-10);
+    .slice(-10)
+    .map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content }));
 
   if (!clean.length) {
     return new Response(JSON.stringify({ error: 'No messages provided.' }), {
