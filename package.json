@@ -2,7 +2,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "node scripts/generate-industry-pages.mjs && node scripts/prepare-site.mjs && next build && node scripts/build-static.mjs",
-    "start": "node scripts/serve-static.mjs"
+    "start": "node scripts/serve-static.mjs",
+    "build:vercel": "node scripts/generate-industry-pages.mjs && node scripts/prepare-site.mjs && next build"
   },
   "engines": {
     "node": ">=20.9.0"
