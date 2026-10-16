@@ -94,7 +94,21 @@ const ALLOWED_ORIGINS = new Set([
   'https://diverseconsultingllc.com',
   'https://www.diverseconsultingllc.com',
 ]);
-function allowedOrigin(origin: string | null): boolean {\n  if (!origin) return false;\n  if (ALLOWED_ORIGINS.has(origin)) return true;\n  try {\n    const url = new URL(origin);\n    return url.protocol === 'https:' && (url.hostname === 'diverse-consulting-ai-preview.vercel.app' || /^diverse-consulting-ai-preview-[a-z0-9-]+-diverseconsulting\\.vercel\\.app$/.test(url.hostname));\n  } catch { return false; }\n}\nfunction corsHeaders(origin: string | null): HeadersInit {
+function allowedOrigin(origin: string | null): boolean {
+  if (!origin) return false;
+  if (ALLOWED_ORIGINS.has(origin)) return true;
+  try {
+    const url = new URL(origin);
+    return url.protocol === 'https:' && (
+      url.hostname === 'diverse-consulting-ai-preview.vercel.app' ||
+      (url.hostname.startsWith('diverse-consulting-ai-preview-') &&
+       url.hostname.endsWith('-diverseconsulting.vercel.app'))
+    );
+  } catch {
+    return false;
+  }
+}
+function corsHeaders(origin: string | null): HeadersInit {
   return origin && allowedOrigin(origin)
     ? { 'Access-Control-Allow-Origin': origin, 'Vary': 'Origin', 'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Access-Control-Allow-Headers': 'Content-Type' }
     : { 'Vary': 'Origin' };
