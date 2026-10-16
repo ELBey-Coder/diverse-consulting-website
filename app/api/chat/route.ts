@@ -59,15 +59,14 @@ async function googleReply(messages: ChatMessage[], key: string): Promise<string
     });
     if (!list.ok) throw new Error('models.list HTTP ' + list.status + ': ' + (await list.text()).slice(0, 500));
     const catalog = await list.json() as { models?: GoogleModel[] };
-    const eligible = (catalog.models || []).filter(m =>
-      m.name?.startsWith('models/gemini-') && m.supportedGenerationMethods?.includes('generateContent')
-      && /flash/.test(m.name) && !/image|audio|tts|live|preview/.test(m.name));
-    eligible.sort((a, b) => {
-      const rank = (n: string) => /flash-lite/.test(n) ? 1 : /flash/.test(n) ? 0 : 2;
-      return rank(a.name || '') - rank(b.name || '') || (b.name || '').localeCompare(a.name || '');
-    });
-    if (!eligible.length) throw new Error('No supported Gemini Flash generateContent model listed for this key');
-    const model = eligible[0].name!;
+    // Prefer an explicitly known free-tier model; never select unrelated/zero-quota
+    // experimental models just because their name contains "flash".
+    const preferred = ['models/gemini-2.5-flash-lite', 'models/gemini-2.5-flash'];
+    const supported = new Set((catalog.models || [])
+      .filter(m => m.supportedGenerationMethods?.includes('generateContent'))
+      .map(m => m.name));
+    const model = preferred.find(name => supported.has(name));
+    if (!model) throw new Error('No approved Gemini model available for this API key');
     const contents = messages.map(m => ({
       role: m.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: m.content }],
