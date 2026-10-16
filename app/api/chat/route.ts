@@ -100,6 +100,10 @@ function allowedOrigin(origin: string | null): boolean {
   try {
     const url = new URL(origin);
     return url.protocol === 'https:' && (
+      url.hostname === 'diverse-consulting-chat-api.vercel.app' ||
+      url.hostname === 'diverse-consulting-chat-api-diverseconsulting.vercel.app' ||
+      (url.hostname.startsWith('diverse-consulting-chat-') &&
+       url.hostname.endsWith('-diverseconsulting.vercel.app')) ||
       url.hostname === 'diverse-consulting-ai-preview.vercel.app' ||
       (url.hostname.startsWith('diverse-consulting-ai-preview-') &&
        url.hostname.endsWith('-diverseconsulting.vercel.app'))
