@@ -102,31 +102,20 @@
         body: JSON.stringify({ messages: conversation.slice(-10) }),
       });
 
-      if (!res.ok || !res.body) throw new Error('API request failed');
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-      let fullText = '';
-      let firstChunk = true;
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-        const chunk = decoder.decode(value, { stream: true });
-        if (firstChunk) {
-          firstChunk = false;
-          botEl.textContent = '';
-        }
-        fullText += chunk;
-        botEl.textContent = fullText;
-        messages.scrollTop = messages.scrollHeight;
+      const data = await res.json().catch(function () { return {}; });
+      if (!res.ok || !data.answer) {
+        const code = typeof data.error === 'string' ? data.error : 'AI_REQUEST_FAILED';
+        const detail = typeof data.message === 'string' ? data.message : 'The AI service could not answer.';
+        throw new Error(code + ': ' + detail);
       }
-
-      fullText = fullText.trim();
-      if (!fullText) throw new Error('Empty response');
-      conversation.push({ role: 'assistant', content: fullText });
+      botEl.textContent = data.answer;
+      messages.scrollTop = messages.scrollHeight;
+      conversation.push({ role: 'assistant', content: data.answer });
     } catch (err) {
-      botEl.textContent = 'Sorry, I’m having trouble right now. Call ' + PHONE + ' or email ' + EMAIL + ', or try again in a moment.';
+      // Display an actionable error instead of hiding every failure behind a generic apology.
+      const message = err instanceof Error ? err.message : 'Connection failed';
+      botEl.textContent = 'AI assistant unavailable: ' + message + ' You can also call ' + PHONE + ' or email ' + EMAIL + '.';
+
     } finally {
       setBusy(false);
       input.focus();
