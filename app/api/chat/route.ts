@@ -9,11 +9,11 @@ Business info:
 - Based in Indian Head, MD, serving clients nationwide virtually
 - Tagline: Grow. Brand. Earn. Succeed Online.
 - Services: AI workflow consulting, custom AI agents/chatbots, AI voice agents, digital marketing, affiliate marketing, web hosting, SEO, lead generation, business automation
-- Pricing (from site):
-  - Starter: $99/mo — missed-call text-back and lead capture (note: chatbot code mentions $497/mo variant, clarify if asked)
-  - Growth: $499/mo — AI receptionist, booking, CRM automation (chatbot code mentions $997/mo variant)
-  - Professional: $1,500–$2,500/mo — voice, chat, follow-up, custom workflows
-  - If pricing questions come up, give ranges and offer to book a free 15-min strategy session for exact quote
+- Pricing:
+  - Starter: $497/month — missed-call text-back and lead capture
+  - Growth: $997/month — AI receptionist, booking, CRM automation
+  - Professional: $1,500–$2,500/month — voice, chat, follow-up, custom workflows
+  - If pricing questions come up, give these exact prices and offer to book a free 15-min strategy session for a custom quote
 - Free 15-minute AI & Marketing Strategy Session — primary conversion goal
 - Consultation requests go through HubSpot form (secure)
 - Contact: +1 (443) 295-3247, Consulting@DiverseConsultingllc.com
