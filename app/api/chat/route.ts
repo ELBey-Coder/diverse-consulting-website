@@ -1,5 +1,5 @@
 import { google } from '@ai-sdk/google';
-import { streamText, type CoreMessage } from 'ai';
+import { generateText, type CoreMessage } from 'ai';
 
 export const maxDuration = 30;
 
@@ -53,25 +53,27 @@ export async function POST(req: Request) {
     });
   }
 
+  if (!process.env.GOOGLE_GENERATIVE_AI_API_KEY) {
+    console.error('Gemini API key is not configured');
+    return Response.json({ error: 'AI_NOT_CONFIGURED', message: 'AI service configuration is missing.' }, { status: 503 });
+  }
+
   try {
-    const result = streamText({
+    const result = await generateText({
       model: google('gemini-flash-latest'),
       system: SYSTEM_PROMPT,
       messages: clean,
     });
-    // Plain text stream — easy for the vanilla JS sitewide chatbot to consume
-    // Use toDataStreamResponse if toTextStreamResponse is unavailable
-    const response = typeof (result as any).toTextStreamResponse === 'function'
-      ? (result as any).toTextStreamResponse()
-      : new Response((result as any).textStream, {
-          headers: { 'Content-Type': 'text/plain; charset=utf-8' },
-        });
-    return response;
+    return Response.json({ answer: result.text }, { status: 200 });
   } catch (error) {
-    console.error('Gemini failed:', error);
-    return new Response(
-      'Sorry, the AI assistant is currently unavailable. Please call +1 (443) 295-3247 or email Consulting@DiverseConsultingllc.com.',
-      { status: 503, headers: { 'Content-Type': 'text/plain' } }
-    );
+    const detail = error instanceof Error ? error.message : String(error);
+    const status = typeof error === 'object' && error !== null && 'statusCode' in error
+      ? String((error as { statusCode?: unknown }).statusCode)
+      : 'unknown';
+    console.error('Gemini generation failed', { status, detail });
+    return Response.json({
+      error: 'AI_UPSTREAM_ERROR',
+      message: 'The AI service could not answer. Please try again or contact us directly.',
+    }, { status: 502 });
   }
 }
