@@ -4,7 +4,9 @@
   const HUBSPOT_FORM = 'https://42o6zx.share-na2.hsforms.com/2HLIbABvpQAOnm6upaf1ysQ';
   const PHONE = '(443) 295-3247';
   const EMAIL = 'Consulting@DiverseConsultingllc.com';
-  const CHAT_API = '/api/chat';
+  const CHAT_API = /^(www\.)?diverseconsultingllc\.com$/i.test(window.location.hostname)
+    ? 'https://diverse-consulting-ai-preview.vercel.app/api/chat'
+    : '/api/chat';
 
   // Conversation history for the Gemini API (kept in memory per page load)
   const conversation = [];
