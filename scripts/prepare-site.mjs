@@ -123,6 +123,20 @@ for (const file of files(root).filter(file => extname(file) === '.html')) {
   writeFileSync(file, html);
 }
 
+
+// Inject the Gemini-powered sitewide chatbot into all public HTML pages.
+// This runs before `next build`, so Vercel serves the updated files.
+const chatbotAssets = '\n<link rel="stylesheet" href="/chatbot.css">\n<script src="/chatbot.js" defer></script>\n';
+for (const file of files(root)) {
+  if (!file.endsWith('.html')) continue;
+  let html = readFileSync(file, 'utf8');
+  if (html.includes('/chatbot.js')) continue;
+  html = html.includes('</head>')
+    ? html.replace('</head>', `${chatbotAssets}</head>`)
+    : `${chatbotAssets}${html}`;
+  writeFileSync(file, html);
+}
+
 const urls = ['/', '/about.html', '/services.html', '/pricing.html', '/reviews.html', '/blog.html', '/resources.html', '/contact.html', '/ai-tools.html', '/free-tools.html', '/ai-resource-center.html', '/partner-marketplace.html', '/case-studies.html', '/privacy.html', '/ai-solutions/', '/lead-response-checklist/', '/lead-response-guides/', '/guides/missed-inquiries-electrical-contractors/', '/guides/ai-receptionist-versus-answering-service/', '/guides/electrical-contractor-booking-checklist/', '/guides/electrical-office-lead-information/', ...Object.keys(industryNames).map(slug => `/ai-for-${slug}/`)];
 writeFileSync(join(root, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(url => `  <url><loc>${domain}${url}</loc></url>`).join('\n')}\n</urlset>\n`);
 writeFileSync(join(root, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${domain}/sitemap.xml\n`);
