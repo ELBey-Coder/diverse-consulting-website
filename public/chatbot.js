@@ -5,7 +5,7 @@
   const PHONE = '(443) 295-3247';
   const EMAIL = 'Consulting@DiverseConsultingllc.com';
   const CHAT_API = /^(www\.)?diverseconsultingllc\.com$/i.test(window.location.hostname)
-    ? 'https://diverse-consulting-ai-preview.vercel.app/api/chat'
+    ? 'https://diverse-consulting-ai-preview-huon51ms8-diverseconsulting.vercel.app/api/chat'
     : '/api/chat';
 
   // Conversation history for the Gemini API (kept in memory per page load)
