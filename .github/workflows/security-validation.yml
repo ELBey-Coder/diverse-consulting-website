@@ -1,0 +1,32 @@
+name: Security validation
+
+on:
+  push:
+    branches:
+      - security-dependency-fixes-2026-10-16
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Clean install
+        run: npm ci
+      - name: Audit production dependencies (low or higher)
+        run: npm audit --omit=dev --audit-level=low
+      - name: Production build
+        run: npm run build
