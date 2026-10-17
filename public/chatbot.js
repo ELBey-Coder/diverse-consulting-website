@@ -60,6 +60,24 @@
     return message;
   }
 
+  // Render a small safe subset of chatbot formatting without injecting model HTML.
+  function renderBotReply(container, raw) {
+    container.replaceChildren();
+    const normalized = String(raw)
+      .replace(/\\([*()[\]])/g, '$1')
+      .replace(/\[([^\]]+)\]\(\s*<?https?:\/\/[^)\s>]+>?\s*\)/g, '$1')
+      .replace(/https?:\/\/[^\s)]+/g, '')
+      .replace(/\*\*([^*]+)\*\*/g, '$1')
+      .replace(/(?<!\w)\*([^*\n]+)\*(?!\w)/g, '$1');
+    normalized.split(/\n+/).forEach(function (line, index) {
+      if (index) container.appendChild(document.createElement('br'));
+      const clean = line.replace(/^\s*#{1,6}\s*/, '').trim();
+      const node = document.createElement('span');
+      node.textContent = clean;
+      container.appendChild(node);
+    });
+  }
+
   function openChat() {
     panel.classList.add('open');
     panel.setAttribute('aria-hidden', 'false');
@@ -111,7 +129,7 @@
         const detail = typeof data.message === 'string' ? data.message : 'The AI service could not answer.';
         throw new Error(code + ': ' + detail);
       }
-      botEl.textContent = data.answer;
+      renderBotReply(botEl, data.answer);
       // Add a trusted, clickable booking link when the assistant invites a consultation.
       // Never render model output as HTML.
       if (/consultation|strategy session|book (a |your |the )?(call|session|meeting)|schedule (a |your )?(call|session|meeting)/i.test(data.answer)) {
