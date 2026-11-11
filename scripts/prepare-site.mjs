@@ -137,6 +137,21 @@ for (const file of files(root)) {
   writeFileSync(file, html);
 }
 
+// Inject the Meta Pixel (Diverse Consulting Website, ID 1805330764085141) into
+// all public HTML pages. Same pattern as the chatbot injection above: files
+// that already contain the Pixel (e.g. public/ai-solutions/index.html, which
+// carries the snippet in source) are skipped so it is never added twice.
+const metaPixel = '\n<!-- Meta Pixel Code -->\n<script>\n!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version=\'2.0\';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window, document, \'script\',\'https://connect.facebook.net/en_US/fbevents.js\');fbq(\'init\', \'1805330764085141\');fbq(\'track\', \'PageView\');\n</script>\n<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1805330764085141&ev=PageView&noscript=1"/></noscript>\n<!-- End Meta Pixel Code -->\n';
+for (const file of files(root)) {
+  if (!file.endsWith('.html')) continue;
+  let html = readFileSync(file, 'utf8');
+  if (html.includes('1805330764085141')) continue;
+  html = html.includes('</head>')
+    ? html.replace('</head>', `${metaPixel}</head>`)
+    : `${metaPixel}${html}`;
+  writeFileSync(file, html);
+}
+
 const urls = ['/', '/about.html', '/services.html', '/pricing.html', '/reviews.html', '/blog.html', '/resources.html', '/contact.html', '/ai-tools.html', '/free-tools.html', '/ai-resource-center.html', '/partner-marketplace.html', '/case-studies.html', '/privacy.html', '/ai-solutions/', '/lead-response-checklist/', '/lead-response-guides/', '/guides/missed-inquiries-electrical-contractors/', '/guides/ai-receptionist-versus-answering-service/', '/guides/electrical-contractor-booking-checklist/', '/guides/electrical-office-lead-information/', ...Object.keys(industryNames).map(slug => `/ai-for-${slug}/`)];
 writeFileSync(join(root, 'sitemap.xml'), `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls.map(url => `  <url><loc>${domain}${url}</loc></url>`).join('\n')}\n</urlset>\n`);
 writeFileSync(join(root, 'robots.txt'), `User-agent: *\nAllow: /\nSitemap: ${domain}/sitemap.xml\n`);
